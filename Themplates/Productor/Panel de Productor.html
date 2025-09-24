@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoChef - Panel Productor Local</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Navbar -->
+  <header class="bg-green-700 text-white shadow-md">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <h1 class="text-2xl font-bold">EcoChef - Productor</h1>
+      <nav class="space-x-4">
+        <a href="#" class="hover:underline">Mis Productos</a>
+        <a href="#" class="hover:underline">Pedidos</a>
+        <a href="#" class="hover:underline">Perfil</a>
+        <a href="#" class="hover:underline">Salir</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="container mx-auto px-6 py-8">
+    <h2 class="text-xl font-bold text-gray-700 mb-6">Gestión de Productos</h2>
+
+    <!-- Formulario para registrar producto -->
+    <div class="bg-white shadow rounded-lg p-6 mb-8">
+      <h3 class="text-lg font-semibold mb-4">Registrar Nuevo Producto</h3>
+      <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Nombre del producto</label>
+          <input type="text" placeholder="Ej. Quinua orgánica"
+            class="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Categoría</label>
+          <select
+            class="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+            <option>Vegetales</option>
+            <option>Frutas</option>
+            <option>Cereales</option>
+            <option>Otros</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Precio (S/.)</label>
+          <input type="number" placeholder="0.00"
+            class="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Stock disponible (Kg/Unidades)</label>
+          <input type="number" placeholder="Cantidad"
+            class="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+        </div>
+        <div class="col-span-2">
+          <label class="block text-sm font-medium text-gray-600">Descripción</label>
+          <textarea rows="3" placeholder="Detalles del producto..."
+            class="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+        </div>
+        <div class="col-span-2">
+          <label class="block text-sm font-medium text-gray-600">Imagen</label>
+          <input type="file"
+            class="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+        </div>
+        <div class="col-span-2 flex justify-end">
+          <button type="submit"
+            class="bg-green-600 text-white px-6 py-2 rounded-md shadow hover:bg-green-700">Registrar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tabla de productos registrados -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-lg font-semibold mb-4">Mis Productos Registrados</h3>
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-gray-100 text-left text-gray-600 text-sm">
+            <th class="p-3">Producto</th>
+            <th class="p-3">Categoría</th>
+            <th class="p-3">Precio</th>
+            <th class="p-3">Stock</th>
+            <th class="p-3">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b">
+            <td class="p-3">Quinua Orgánica</td>
+            <td class="p-3">Cereal</td>
+            <td class="p-3">S/. 12.00</td>
+            <td class="p-3">50 Kg</td>
+            <td class="p-3">
+              <button class="text-blue-600 hover:underline mr-2">Editar</button>
+              <button class="text-red-600 hover:underline">Eliminar</button>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="p-3">Papa Nativa</td>
+            <td class="p-3">Vegetal</td>
+            <td class="p-3">S/. 3.50</td>
+            <td class="p-3">100 Kg</td>
+            <td class="p-3">
+              <button class="text-blue-600 hover:underline mr-2">Editar</button>
+              <button class="text-red-600 hover:underline">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-green-700 text-white py-4 mt-8 text-center">
+    <p>&copy; 2025 EcoChef - Plataforma de productores locales</p>
+  </footer>
+</body>
+</html>

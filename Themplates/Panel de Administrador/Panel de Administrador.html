@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoChef - Panel Administrador</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Navbar -->
+  <header class="bg-gray-900 text-white shadow-md">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <h1 class="text-2xl font-bold">EcoChef - Administrador</h1>
+      <nav class="space-x-4">
+        <a href="#" class="hover:underline">Usuarios</a>
+        <a href="#" class="hover:underline">Productos</a>
+        <a href="#" class="hover:underline">Pedidos</a>
+        <a href="#" class="hover:underline">Reportes</a>
+        <a href="#" class="hover:underline">Salir</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="container mx-auto px-6 py-8">
+    <!-- Dashboard -->
+    <h2 class="text-xl font-bold text-gray-700 mb-6">Panel de Control</h2>
+
+    <!-- Tarjetas resumen -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white shadow rounded-lg p-4 text-center">
+        <h3 class="text-gray-500 text-sm">Usuarios Registrados</h3>
+        <p class="text-2xl font-bold text-blue-600">120</p>
+      </div>
+      <div class="bg-white shadow rounded-lg p-4 text-center">
+        <h3 class="text-gray-500 text-sm">Chefs / Instructores</h3>
+        <p class="text-2xl font-bold text-green-600">15</p>
+      </div>
+      <div class="bg-white shadow rounded-lg p-4 text-center">
+        <h3 class="text-gray-500 text-sm">Productores Locales</h3>
+        <p class="text-2xl font-bold text-yellow-600">25</p>
+      </div>
+      <div class="bg-white shadow rounded-lg p-4 text-center">
+        <h3 class="text-gray-500 text-sm">Pedidos Totales</h3>
+        <p class="text-2xl font-bold text-red-600">320</p>
+      </div>
+    </div>
+
+    <!-- Gestión de Usuarios -->
+    <div class="bg-white shadow rounded-lg p-6 mb-8">
+      <h3 class="text-lg font-semibold mb-4">Gestión de Usuarios</h3>
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-gray-100 text-left text-gray-600 text-sm">
+            <th class="p-3">Nombre</th>
+            <th class="p-3">Correo</th>
+            <th class="p-3">Rol</th>
+            <th class="p-3">Estado</th>
+            <th class="p-3">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b">
+            <td class="p-3">Ana Torres</td>
+            <td class="p-3">ana@example.com</td>
+            <td class="p-3">Usuario</td>
+            <td class="p-3"><span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">Activo</span></td>
+            <td class="p-3">
+              <button class="text-blue-600 hover:underline mr-2">Editar</button>
+              <button class="text-red-600 hover:underline">Eliminar</button>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="p-3">Carlos Ramos</td>
+            <td class="p-3">carlos@example.com</td>
+            <td class="p-3">Productor</td>
+            <td class="p-3"><span class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded">Inactivo</span></td>
+            <td class="p-3">
+              <button class="text-blue-600 hover:underline mr-2">Editar</button>
+              <button class="text-red-600 hover:underline">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Gestión de Productos -->
+    <div class="bg-white shadow rounded-lg p-6 mb-8">
+      <h3 class="text-lg font-semibold mb-4">Gestión de Productos</h3>
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-gray-100 text-left text-gray-600 text-sm">
+            <th class="p-3">Producto</th>
+            <th class="p-3">Productor</th>
+            <th class="p-3">Categoría</th>
+            <th class="p-3">Precio</th>
+            <th class="p-3">Estado</th>
+            <th class="p-3">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b">
+            <td class="p-3">Quinua Orgánica</td>
+            <td class="p-3">Carlos Ramos</td>
+            <td class="p-3">Cereal</td>
+            <td class="p-3">S/. 12.00</td>
+            <td class="p-3"><span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">Publicado</span></td>
+            <td class="p-3">
+              <button class="text-yellow-600 hover:underline mr-2">Revisar</button>
+              <button class="text-red-600 hover:underline">Eliminar</button>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="p-3">Papa Nativa</td>
+            <td class="p-3">María López</td>
+            <td class="p-3">Vegetal</td>
+            <td class="p-3">S/. 3.50</td>
+            <td class="p-3"><span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded">Pendiente</span></td>
+            <td class="p-3">
+              <button class="text-yellow-600 hover:underline mr-2">Revisar</button>
+              <button class="text-red-600 hover:underline">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Reportes -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-lg font-semibold mb-4">Reportes Rápidos</h3>
+      <ul class="list-disc list-inside text-gray-700">
+        <li><a href="#" class="text-blue-600 hover:underline">Reporte de Ventas por mes</a></li>
+        <li><a href="#" class="text-blue-600 hover:underline">Productos más vendidos</a></li>
+        <li><a href="#" class="text-blue-600 hover:underline">Usuarios activos</a></li>
+      </ul>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-4 mt-8 text-center">
+    <p>&copy; 2025 EcoChef - Administración de plataforma</p>
+  </footer>
+</body>
+</html>
