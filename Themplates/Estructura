@@ -1,0 +1,69 @@
+ecochef/
+│
+├── public/                     # Carpeta accesible públicamente (raíz del servidor web)
+│   ├── index.php                # Punto de entrada principal del sistema
+│   ├── css/                     # Archivos CSS
+│   │   └── estilos.css
+│   ├── js/                      # Archivos JavaScript
+│   │   └── app.js
+│   ├── img/                     # Imágenes y logos
+│   │   └── logo.png
+│   └── uploads/                 # Archivos subidos por usuarios/productores
+│
+├── app/                         # Lógica del sistema
+│   ├── config/                  # Configuración global
+│   │   ├── database.php         # Conexión a la BD
+│   │   └── config.php           # Variables globales (URL base, claves API, etc.)
+│   │
+│   ├── controllers/             # Controladores (manejan peticiones y lógica)
+│   │   ├── UsuarioController.php
+│   │   ├── ChefController.php
+│   │   ├── ProductorController.php
+│   │   ├── AdminController.php
+│   │   └── PedidoController.php
+│   │
+│   ├── models/                  # Modelos (acceso a BD, CRUD)
+│   │   ├── Usuario.php
+│   │   ├── Chef.php
+│   │   ├── Productor.php
+│   │   ├── Admin.php
+│   │   └── Pedido.php
+│   │
+│   ├── views/                   # Vistas (HTML, plantillas)
+│   │   ├── usuario/
+│   │   │   └── dashboard.php
+│   │   ├── chef/
+│   │   │   └── dashboard.php
+│   │   ├── productor/
+│   │   │   └── dashboard.php
+│   │   └── admin/
+│   │       └── dashboard.php
+│   │
+│   └── routes/                  # Definición de rutas
+│       └── web.php              # Rutas principales (frontend)
+│       └── api.php              # Rutas API REST
+│
+├── api/                         # Carpeta para endpoints REST
+│   ├── index.php
+│   ├── usuarios.php             # Endpoints de usuarios
+│   ├── chefs.php                # Endpoints de chefs
+│   ├── productores.php          # Endpoints de productores
+│   ├── pedidos.php              # Endpoints de pedidos
+│   └── auth.php                 # Endpoints de login / registro
+│
+├── database/                    
+│   ├── migrations/              # Scripts de creación/modificación de tablas
+│   │   └── 001_create_tables.sql
+│   └── seeds/                   # Datos iniciales (usuarios de prueba, etc.)
+│       └── 001_insert_data.sql
+│
+├── tests/                       # Pruebas (TDD si se aplica)
+│   ├── UsuarioTest.php
+│   └── PedidoTest.php
+│
+├── vendor/                      # Librerías externas (si en algún momento usamos Composer)
+│
+├── .env                         # Configuración sensible (usuario/clave DB, API keys)
+├── .gitignore                   # Archivos a ignorar en Git
+├── composer.json                # Si se usan dependencias (opcional)
+└── README.md                    # Documentación del proyecto
