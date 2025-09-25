@@ -1,17 +1,17 @@
 <?php
-// config/config.php
+// =======================================
+// EcoChef - Configuración global
+// Ruta: app/config/config.php
+// =======================================
 
-// Zona horaria
-date_default_timezone_set("America/Lima");
+// Definir constantes solo si no existen
+if (!defined('APP_NAME')) define('APP_NAME', 'EcoChef');
+if (!defined('APP_URL')) define('APP_URL', 'http://localhost/ecochef'); // Ajustar según tu entorno
+if (!defined('APP_VERSION')) define('APP_VERSION', '1.0');
 
-// Nombre de la app
-define("APP_NAME", "Sistema de Recetas");
+// Configuración de zona horaria
+if (!defined('APP_TIMEZONE')) define('APP_TIMEZONE', 'America/Lima');
+date_default_timezone_set(APP_TIMEZONE);
 
-// URL base (ajustar según entorno)
-define("BASE_URL", "http://localhost/tu_proyecto/");
+// Otros parámetros globales (API Keys, etc.) se pueden agregar aquí
 
-// Rutas principales
-define("APP_PATH", dirname(__DIR__));
-define("VIEW_PATH", APP_PATH . "/views/");
-define("LAYOUT_PATH", VIEW_PATH . "layouts/");
-define("CONFIG_PATH", APP_PATH . "/config/");
