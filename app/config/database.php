@@ -7,7 +7,7 @@
 // Configuración de conexión
 $host = '127.0.0.1';        // usar 127.0.0.1 en vez de localhost
 $port = 3306;               // puerto MySQL (ajustar si tu XAMPP usa otro)
-$dbname = 'ecochef_db';     // nombre de la base de datos
+$dbname = 'ecochef_v1';     // nombre de la base de datos
 $user = 'root';             // usuario de MySQL
 $pass = '';                 // contraseña de MySQL (XAMPP por defecto vacía)
 

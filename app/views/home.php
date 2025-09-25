@@ -84,9 +84,11 @@
   <!-- Footer -->
   <footer class="bg-gray-900 text-white py-6 mt-12 text-center">
     <p>&copy; 2025 EcoChef. Todos los derechos reservados.</p>
+    <!--
     <p class="text-gray-400 text-sm mt-2">
       Error 404 personalizado en: <code>app/views/404.php</code>
     </p>
+-->
   </footer>
 
 </body>
