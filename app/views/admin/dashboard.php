@@ -1,21 +1,24 @@
 <?php
-// =======================================
-// EcoChef - Dashboard Administrador
-// Ruta: app/views/dashboard/admin.php
-// =======================================
+    // =======================================
+    // EcoChef - Dashboard Administrador
+    // Ruta: app/views/dashboard/admin.php
+    // =======================================
 
-session_start();
+    session_start();
 
-// Seguridad: validar sesión
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
-    header("Location: /app/views/auth/login.php");
-    exit();
-}
+    // Seguridad: validar sesión
+    if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+        header("Location: /app/views/auth/login.php");
+        exit();
+    }
 
-$user = $_SESSION['user'];
+    $user = $_SESSION['user']; 
+    
 ?>
 
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . "/layouts/header.php"; ?>
+<div class="layout">
+    <?php include __DIR__ . "/layouts/sidebar.php"; ?>
 
 <div class="container mt-4">
     <h2 class="mb-3">⚙️ Panel del Administrador - EcoChef</h2>

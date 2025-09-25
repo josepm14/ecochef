@@ -1,0 +1,20 @@
+# =======================================
+# EcoChef - .htaccess para Apache
+# Ubicación: raíz del proyecto (/)
+# =======================================
+
+# Activar RewriteEngine
+RewriteEngine On
+
+# Asegurar que el proyecto funcione en subcarpetas
+# (ejemplo: http://localhost/ecochef/)
+# Cambia "/ecochef" si tu carpeta se llama diferente.
+RewriteBase /ecochef/
+
+# Ignorar archivos y carpetas reales (CSS, JS, imágenes, etc.)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Redirigir todo lo demás al dispatcher
+RewriteRule ^(.*)$ dispatcher.php [QSA,L]

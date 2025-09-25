@@ -1,21 +1,23 @@
 <?php
-// =======================================
-// EcoChef - Dashboard Docente
-// Ruta: app/views/dashboard/docente.php
-// =======================================
+    // =======================================
+    // EcoChef - Dashboard Docente
+    // Ruta: app/views/dashboard/docente.php
+    // =======================================
 
-session_start();
+    session_start();
 
-// Seguridad: validar sesión
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'docente') {
-    header("Location: /app/views/auth/login.php");
-    exit();
-}
+    // Seguridad: validar sesión
+    if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'docente') {
+        header("Location: /app/views/auth/login.php");
+        exit();
+    }
 
-$user = $_SESSION['user'];
+    $user = $_SESSION['user'];
 ?>
 
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . "/layouts/header.php"; ?>
+<div class="layout">
+    <?php include __DIR__ . "/layouts/sidebar.php"; ?>
 
 <div class="container mt-4">
     <h2 class="mb-3">👨‍🏫 Panel del Docente - EcoChef</h2>
@@ -97,4 +99,5 @@ $user = $_SESSION['user'];
     </div>
 </div>
 
-<?php include __DIR__ . '/../layouts/footer.php'; ?>
+</div>
+<?php include __DIR__ . "/layouts/footer.php"; ?>

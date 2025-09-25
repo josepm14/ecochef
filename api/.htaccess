@@ -1,0 +1,13 @@
+# Activar el motor de reescritura
+RewriteEngine On
+
+# Base relativa a la carpeta /api/
+RewriteBase /api/
+
+# Si el archivo o directorio físico existe, no redirigir
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirigir todo lo demás a index.php y pasar el endpoint
+# Ejemplo: /api/usuarios → index.php?endpoint=usuarios
+RewriteRule ^(.+)$ index.php?endpoint=$1 [QSA,L]

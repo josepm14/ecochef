@@ -1,56 +1,38 @@
 <?php
-// =======================================
-// EcoChef - Dashboard Beneficiario
-// Ruta: app/views/beneficiario/dashboard.php
-// =======================================
+    // =======================================
+    // EcoChef - Dashboard Beneficiario
+    // Ruta: app/views/beneficiario/dashboard.php
+    // =======================================
 
-session_start();
-require_once "db.php"; // conexión a MySQL
+    session_start();
+    require_once "db.php"; // conexión a MySQL
 
-// Verificar si el usuario es beneficiario
-if (!isset($_SESSION['user_id']) || $_SESSION['rol'] !== 'beneficiario') {
-    header("Location: login.php");
-    exit();
-}
+    // Verificar si el usuario es beneficiario
+    if (!isset($_SESSION['user_id']) || $_SESSION['rol'] !== 'beneficiario') {
+        header("Location: login.php");
+        exit();
+    }
 
-$user_id = $_SESSION['user_id'];
-$nombre_usuario = $_SESSION['nombre'];
+    $user_id = $_SESSION['user_id'];
+    $nombre_usuario = $_SESSION['nombre'];
 
-// Obtener recetas disponibles
-$sqlRecetas = "SELECT r.id, r.titulo, r.descripcion, u.nombre AS autor
-               FROM recetas r
-               JOIN usuarios u ON r.autor_id = u.id_usuario
-               WHERE r.estado = 'aprobada'";
-$stmt = $conn->prepare($sqlRecetas);
-$stmt->execute();
-$recetas = $stmt->get_result();
+    // Obtener recetas disponibles
+    $sqlRecetas = "SELECT r.id, r.titulo, r.descripcion, u.nombre AS autor
+                  FROM recetas r
+                  JOIN usuarios u ON r.autor_id = u.id_usuario
+                  WHERE r.estado = 'aprobada'";
+    $stmt = $conn->prepare($sqlRecetas);
+    $stmt->execute();
+    $recetas = $stmt->get_result();
 
-// Productos para la lista de compras
-$sqlProductos = "SELECT id, nombre, precio FROM productos WHERE stock > 0";
-$productos = $conn->query($sqlProductos);
+    // Productos para la lista de compras
+    $sqlProductos = "SELECT id, nombre, precio FROM productos WHERE stock > 0";
+    $productos = $conn->query($sqlProductos);
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard Beneficiario - EcoChef</title>
-  <link rel="stylesheet" href="templates/assets/css/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
-<div class="d-flex">
-  <!-- Sidebar -->
-  <div class="bg-dark text-white p-3 vh-100" style="width: 240px;">
-    <h4 class="text-center">EcoChef</h4>
-    <hr>
-    <ul class="nav flex-column">
-      <li class="nav-item"><a href="dashboard_beneficiario.php" class="nav-link text-white">🏠 Inicio</a></li>
-      <li class="nav-item"><a href="#recetas" class="nav-link text-white">🍲 Recetas</a></li>
-      <li class="nav-item"><a href="#compras" class="nav-link text-white">🛒 Lista de compras</a></li>
-      <li class="nav-item"><a href="perfil.php" class="nav-link text-white">👤 Perfil</a></li>
-      <li class="nav-item"><a href="logout.php" class="nav-link text-danger">🚪 Cerrar sesión</a></li>
-    </ul>
-  </div>
+
+<?php include __DIR__ . "/layouts/header.php"; ?>
+<div class="layout">
+    <?php include __DIR__ . "/layouts/sidebar.php"; ?>
 
   <!-- Main -->
   <div class="container-fluid p-4">
@@ -121,5 +103,8 @@ function enviarWhatsApp() {
   window.open(url, '_blank');
 }
 </script>
-</body>
-</html>
+
+
+
+</div>
+<?php include __DIR__ . "/layouts/footer.php"; ?>

@@ -1,50 +1,50 @@
 <?php
-// =======================================
-// EcoChef - Login
-// Ruta: app/views/auth/login.php
-// =======================================
-session_start();
+    // =======================================
+    // EcoChef - Login
+    // Ruta: app/views/auth/login.php
+    // =======================================
+    session_start();
 
-// Incluir conexión a la BD
-require_once __DIR__ . "/../../config/database.php";
+    // Incluir conexión a la BD
+    require_once __DIR__ . "/../../config/database.php";
 
-// Si ya está logueado → mandar al dashboard según rol
-if (isset($_SESSION['usuario']) && isset($_SESSION['rol'])) {
-    $rol = $_SESSION['rol'];
-    header("Location: /app/views/$rol/dashboard.php");
-    exit;
-}
-
-$error = "";
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? "");
-    $password = trim($_POST['password'] ?? "");
-
-    if ($email !== "" && $password !== "") {
-        try {
-            $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = :email LIMIT 1");
-            $stmt->execute(['email' => $email]);
-            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($usuario && password_verify($password, $usuario['password'])) {
-                // Guardar datos en sesión
-                $_SESSION['usuario'] = $usuario['id_usuario'];
-                $_SESSION['rol'] = $usuario['rol'];
-
-                // Redirigir según rol
-                header("Location: /app/views/" . $usuario['rol'] . "/dashboard.php");
-                exit;
-            } else {
-                $error = "Credenciales incorrectas. Inténtalo nuevamente.";
-            }
-        } catch (PDOException $e) {
-            $error = "Error en la base de datos: " . $e->getMessage();
-        }
-    } else {
-        $error = "Por favor, complete todos los campos.";
+    // Si ya está logueado → mandar al dashboard según rol
+    if (isset($_SESSION['usuario']) && isset($_SESSION['rol'])) {
+        $rol = $_SESSION['rol'];
+        header("Location: /app/views/$rol/dashboard.php");
+        exit;
     }
-}
+
+    $error = "";
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $email = trim($_POST['email'] ?? "");
+        $password = trim($_POST['password'] ?? "");
+
+        if ($email !== "" && $password !== "") {
+            try {
+                $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = :email LIMIT 1");
+                $stmt->execute(['email' => $email]);
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($usuario && password_verify($password, $usuario['password'])) {
+                    // Guardar datos en sesión
+                    $_SESSION['usuario'] = $usuario['id_usuario'];
+                    $_SESSION['rol'] = $usuario['rol'];
+
+                    // Redirigir según rol
+                    header("Location: /app/views/" . $usuario['rol'] . "/dashboard.php");
+                    exit;
+                } else {
+                    $error = "Credenciales incorrectas. Inténtalo nuevamente.";
+                }
+            } catch (PDOException $e) {
+                $error = "Error en la base de datos: " . $e->getMessage();
+            }
+        } else {
+            $error = "Por favor, complete todos los campos.";
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="es">
