@@ -1,5 +1,5 @@
--- ecochef_db_piloto.sql
--- Base de datos piloto para EcoChef (versión funcional)
+-- ecochef_db_piloto_corregido.sql
+-- Base de datos piloto para EcoChef (versión corregida para MySQL 8.x)
 -- NOTA: ejecutar con un usuario que tenga permisos CREATE/DROP DATABASE
 
 DROP DATABASE IF EXISTS ecochef_v1;
@@ -22,9 +22,9 @@ CREATE TABLE usuarios (
   direccion VARCHAR(255),
   rol ENUM('estudiante','docente','productor','beneficiario','admin') NOT NULL DEFAULT 'beneficiario',
   estado ENUM('activo','inactivo','pendiente') NOT NULL DEFAULT 'pendiente',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NULL DEFAULT NULL,
-  last_login TIMESTAMP NULL DEFAULT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  last_login DATETIME DEFAULT NULL,
   descripcion TEXT,
   INDEX idx_rol (rol)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -43,8 +43,8 @@ CREATE TABLE recetas (
   id_autor INT NOT NULL,                 -- referencia a usuarios.id
   estado ENUM('draft','pending','published','rejected','archived') DEFAULT 'pending',
   categoria VARCHAR(100),
-  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  actualizado_en TIMESTAMP NULL DEFAULT NULL,
+  creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (id_autor) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -66,31 +66,14 @@ CREATE TABLE productos (
   imagen VARCHAR(255),
   id_productor INT NOT NULL,
   estado ENUM('disponible','sin_stock','no_publicado') DEFAULT 'no_publicado',
-  publicado_en TIMESTAMP NULL DEFAULT NULL,
-  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  actualizado_en TIMESTAMP NULL DEFAULT NULL,
+  publicado_en DATETIME DEFAULT NULL,
+  creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (id_productor) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE INDEX idx_productos_productor ON productos(id_productor);
 CREATE INDEX idx_productos_estado ON productos(estado);
-
--- Trigger: actualizar estado a 'sin_stock' si stock = 0 (on update)
-DELIMITER $$
-CREATE TRIGGER trg_productos_stock_update
-BEFORE UPDATE ON productos
-FOR EACH ROW
-BEGIN
-  IF NEW.stock <= 0 THEN
-    SET NEW.estado = 'sin_stock';
-  ELSE
-    -- si se actualiza a stock > 0 y estaba sin_stock, mantener 'disponible' sólo si se desea
-    IF OLD.estado = 'sin_stock' THEN
-      SET NEW.estado = 'disponible';
-    END IF;
-  END IF;
-END$$
-DELIMITER ;
 
 -- =====================================================================
 -- Tabla: pedidos (beneficiarios piden productos a productores)
@@ -102,8 +85,8 @@ CREATE TABLE pedidos (
   id_productor INT NOT NULL,               -- proveedor al que se dirige el pedido
   total DECIMAL(12,2) DEFAULT 0.00,
   estado ENUM('pendiente','confirmado','enviado','entregado','cancelado') DEFAULT 'pendiente',
-  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  actualizado_en TIMESTAMP NULL DEFAULT NULL,
+  creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   direccion_envio VARCHAR(255),
   referencia_pago VARCHAR(100),
   FOREIGN KEY (id_beneficiario) REFERENCES usuarios(id) ON DELETE CASCADE,
@@ -120,12 +103,13 @@ CREATE TABLE pedido_detalle (
   id_producto INT NOT NULL,
   cantidad INT NOT NULL,
   precio_unitario DECIMAL(10,2) NOT NULL,
-  subtotal DECIMAL(12,2) GENERATED ALWAYS AS (cantidad * precio_unitario) VIRTUAL,
+  subtotal DECIMAL(12,2) GENERATED ALWAYS AS (cantidad * precio_unitario) STORED,
   FOREIGN KEY (id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
   FOREIGN KEY (id_producto) REFERENCES productos(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE INDEX idx_pedido_detalle_pedido ON pedido_detalle(id_pedido);
+CREATE INDEX idx_pedido_detalle_producto ON pedido_detalle(id_producto);
 
 -- =====================================================================
 -- Tabla: shopping_lists (lista de compras que el beneficiario genera)
@@ -137,13 +121,15 @@ CREATE TABLE shopping_lists (
   id_productor INT NOT NULL,
   titulo VARCHAR(150),
   nota TEXT,
-  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enviado_whatsapp TINYINT(1) DEFAULT 0,
   whatsapp_text TEXT,            -- almacenamos el texto que se envió por whatsapp (opcional)
-  whatsapp_sent_at TIMESTAMP NULL DEFAULT NULL,
+  whatsapp_sent_at DATETIME DEFAULT NULL,
   FOREIGN KEY (id_beneficiario) REFERENCES usuarios(id) ON DELETE CASCADE,
   FOREIGN KEY (id_productor) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_shopping_list_productor ON shopping_lists(id_productor);
 
 -- Items de la lista de compras
 CREATE TABLE shopping_items (
@@ -153,12 +139,12 @@ CREATE TABLE shopping_items (
   descripcion VARCHAR(255) NOT NULL,
   cantidad DECIMAL(10,3) DEFAULT 1,
   unidad VARCHAR(50) DEFAULT NULL,
-  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_shopping_list) REFERENCES shopping_lists(id) ON DELETE CASCADE,
   FOREIGN KEY (id_producto) REFERENCES productos(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE INDEX idx_shopping_list_productor ON shopping_lists(id_productor);
+CREATE INDEX idx_shopping_items_producto ON shopping_items(id_producto);
 
 -- =====================================================================
 -- Tabla: clases (talleres) creadas por docentes
@@ -172,8 +158,8 @@ CREATE TABLE clases (
   id_docente INT NOT NULL,
   cupos_total INT DEFAULT 10,       -- cupos generales para público
   estado ENUM('borrador','abierta','confirmada','finalizada','cancelada') DEFAULT 'borrador',
-  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  actualizado_en TIMESTAMP NULL DEFAULT NULL,
+  creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (id_docente) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -186,50 +172,13 @@ CREATE TABLE class_assignments (
   id_clase INT NOT NULL,
   id_estudiante INT NOT NULL,
   role ENUM('expositor','ayudante') DEFAULT 'expositor',  -- tipo de participación
-  asignado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  asignado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_clase) REFERENCES clases(id) ON DELETE CASCADE,
   FOREIGN KEY (id_estudiante) REFERENCES usuarios(id) ON DELETE CASCADE,
   UNIQUE KEY uq_clase_estudiante (id_clase, id_estudiante)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE INDEX idx_assignments_clase ON class_assignments(id_clase);
-
--- Trigger: impedir asignar más de 3 estudiantes por clase
-DELIMITER $$
-CREATE TRIGGER trg_class_assignments_before_insert
-BEFORE INSERT ON class_assignments
-FOR EACH ROW
-BEGIN
-  DECLARE cnt INT;
-  SELECT COUNT(*) INTO cnt FROM class_assignments WHERE id_clase = NEW.id_clase;
-  IF cnt >= 3 THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se pueden asignar más de 3 estudiantes a una clase.';
-  END IF;
-
-  -- Opcional: verificar que el usuario asignado sea rol 'estudiante'
-  DECLARE rol_usuario VARCHAR(50);
-  SELECT rol INTO rol_usuario FROM usuarios WHERE id = NEW.id_estudiante;
-  IF rol_usuario IS NULL OR rol_usuario != 'estudiante' THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Solo se pueden asignar usuarios con rol estudiante.';
-  END IF;
-END$$
-DELIMITER ;
-
--- Trigger: antes de actualizar la clase a estado 'confirmada' verificar que tenga al menos 2 asignados
-DELIMITER $$
-CREATE TRIGGER trg_clases_before_update
-BEFORE UPDATE ON clases
-FOR EACH ROW
-BEGIN
-  IF NEW.estado = 'confirmada' AND OLD.estado <> 'confirmada' THEN
-    DECLARE cnt INT;
-    SELECT COUNT(*) INTO cnt FROM class_assignments WHERE id_clase = NEW.id;
-    IF cnt < 2 THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Para confirmar la clase debe haber al menos 2 estudiantes asignados como expositores.';
-    END IF;
-  END IF;
-END$$
-DELIMITER ;
 
 -- =====================================================================
 -- Tabla: inscripciones (usuarios inscritos en clases como asistentes)
@@ -238,7 +187,7 @@ CREATE TABLE inscripciones (
   id INT AUTO_INCREMENT PRIMARY KEY,
   id_clase INT NOT NULL,
   id_usuario INT NOT NULL,
-  fecha_inscripcion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  fecha_inscripcion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_clase) REFERENCES clases(id) ON DELETE CASCADE,
   FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -256,17 +205,78 @@ CREATE TABLE logs (
   detalles TEXT,
   ip VARCHAR(45),
   user_agent VARCHAR(255),
-  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================================
--- VISTAS / PROCEDIMIENTOS (opcionales) para facilitar integraciones:
--- 1) Vista con resumen de pedido para construir mensaje WhatsApp
+-- TRIGGERS
+-- Eliminamos triggers antiguos (si existen) y creamos versiones corregidas.
+-- IMPORTANTE: los DECLARE deben ir al inicio de cada bloque BEGIN...END.
 -- =====================================================================
 
--- Vista: resumen lista de compras (concatenación simple)
-CREATE VIEW vw_shopping_list_summary AS
+DROP TRIGGER IF EXISTS trg_productos_stock_update;
+DROP TRIGGER IF EXISTS trg_class_assignments_before_insert;
+DROP TRIGGER IF EXISTS trg_clases_before_update;
+
+DELIMITER $$
+
+-- Trigger: actualizar estado a 'sin_stock' si stock = 0 (on update)
+CREATE TRIGGER trg_productos_stock_update
+BEFORE UPDATE ON productos
+FOR EACH ROW
+BEGIN
+  -- Si el stock es nulo o <= 0 => sin_stock
+  IF NEW.stock IS NULL OR NEW.stock <= 0 THEN
+    SET NEW.estado = 'sin_stock';
+  ELSE
+    -- Si antes estaba 'sin_stock' y ahora hay stock, poner 'disponible'
+    IF OLD.estado = 'sin_stock' THEN
+      SET NEW.estado = 'disponible';
+    END IF;
+  END IF;
+END$$
+
+-- Trigger: impedir asignar más de 3 estudiantes por clase y validar rol
+CREATE TRIGGER trg_class_assignments_before_insert
+BEFORE INSERT ON class_assignments
+FOR EACH ROW
+BEGIN
+  DECLARE cnt INT DEFAULT 0;
+  DECLARE rol_usuario VARCHAR(20);
+
+  SELECT COUNT(*) INTO cnt FROM class_assignments WHERE id_clase = NEW.id_clase;
+  IF cnt >= 3 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se pueden asignar más de 3 estudiantes a una clase.';
+  END IF;
+
+  SELECT rol INTO rol_usuario FROM usuarios WHERE id = NEW.id_estudiante;
+  IF rol_usuario IS NULL OR rol_usuario != 'estudiante' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Solo se pueden asignar usuarios con rol estudiante.';
+  END IF;
+END$$
+
+-- Trigger: antes de actualizar la clase a estado 'confirmada' verificar que tenga al menos 2 asignados como 'expositor'
+CREATE TRIGGER trg_clases_before_update
+BEFORE UPDATE ON clases
+FOR EACH ROW
+BEGIN
+  DECLARE cnt INT DEFAULT 0;
+  IF NEW.estado = 'confirmada' AND OLD.estado <> 'confirmada' THEN
+    SELECT COUNT(*) INTO cnt FROM class_assignments WHERE id_clase = NEW.id AND role = 'expositor';
+    IF cnt < 2 THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Para confirmar la clase debe haber al menos 2 estudiantes asignados como expositores.';
+    END IF;
+  END IF;
+END$$
+
+DELIMITER ;
+
+-- =====================================================================
+-- VISTA: resumen lista de compras (concatenación de items)
+-- Se usa GROUP_CONCAT para armar el texto que puede enviarse por WhatsApp
+-- =====================================================================
+CREATE OR REPLACE VIEW vw_shopping_list_summary AS
 SELECT
   sl.id AS shopping_list_id,
   sl.id_beneficiario,
@@ -275,16 +285,20 @@ SELECT
   u_prod.nombre AS productor_nombre,
   sl.titulo,
   sl.nota,
-  sl.creado_en
+  sl.creado_en,
+  GROUP_CONCAT(CONCAT(si.descripcion, ' (', si.cantidad, IFNULL(CONCAT(' ', si.unidad), ''), ')') SEPARATOR ', ') AS items
 FROM shopping_lists sl
 LEFT JOIN usuarios u_benef ON u_benef.id = sl.id_beneficiario
-LEFT JOIN usuarios u_prod ON u_prod.id = sl.id_productor;
+LEFT JOIN usuarios u_prod ON u_prod.id = sl.id_productor
+LEFT JOIN shopping_items si ON si.id_shopping_list = sl.id
+GROUP BY sl.id, sl.id_beneficiario, sl.id_productor, u_benef.nombre, u_prod.nombre, sl.titulo, sl.nota, sl.creado_en;
 
 -- =====================================================================
--- RECOMENDACIONES:
--- - Validar en la capa de aplicación (PHP) que las operaciones críticas cumplan reglas adicionales.
--- - Mantener hashing fuerte para password (bcrypt/argon2).
--- - Implementar endpoints /api/me que devuelvan rol y permisos para que frontend renderice menú.
+-- RECOMENDACIONES FINALES:
+-- 1) Manejar transacciones al crear pedidos (BEGIN/COMMIT) desde la aplicación para evitar condiciones de carrera
+-- 2) Validar reglas adicionales en la capa de aplicación (e.g. permisos, límites, precios)
+-- 3) Hash fuerte para password (bcrypt/argon2). No confiar en triggers para lógica de seguridad.
+-- 4) Si esperas gran volumen, considera usar BIGINT para los PKs y revisar índices.
 -- =====================================================================
 
 -- FIN DEL SCRIPT

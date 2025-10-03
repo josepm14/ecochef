@@ -5,11 +5,18 @@
 // =======================================
 
 // Configuración de conexión
-$host = '127.0.0.1';        // usar 127.0.0.1 en vez de localhost
+/*
+$host = 'localhost';        // usar 127.0.0.1 en vez de localhost
+$port = 3306;               // puerto MySQL (ajustar si tu XAMPP usa otro)
+$dbname = 'dfxjzyoq_ecochef_v1';     // nombre de la base de datos
+$user = 'dfxjzyoq_3cochef'; // usuario de MySQL
+$pass = '3c0ch3f01-2025';   // contraseña de MySQL (XAMPP por defecto vacía)
+*/
+$host = 'localhost';        // usar 127.0.0.1 en vez de localhost
 $port = 3306;               // puerto MySQL (ajustar si tu XAMPP usa otro)
 $dbname = 'ecochef_v1';     // nombre de la base de datos
-$user = 'root';             // usuario de MySQL
-$pass = '';                 // contraseña de MySQL (XAMPP por defecto vacía)
+$user = 'root'; // usuario de MySQL
+$pass = '';   // contraseña de MySQL (XAMPP por defecto vacía)
 
 try {
     // Crear conexión PDO

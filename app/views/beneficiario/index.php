@@ -3,37 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Administrador - EcoChef</title>
+    <title>Dashboard Beneficiario - EcoChef</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/public/css/estilos.css">
 </head>
 <body class="bg-gray-100">
     <header class="bg-green-600 text-white p-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold">EcoChef - Dashboard de Administrador</h1>
+        <h1 class="text-xl font-bold">EcoChef - Dashboard de Beneficiario</h1>
         <nav>
             <a href="/public/index.php" class="text-white hover:text-gray-200 mr-4">Inicio</a>
             <a href="?route=logout" class="text-white hover:text-gray-200">Cerrar Sesión</a>
         </nav>
     </header>
     <main class="container mx-auto mt-8 p-4">
-        <h2 class="text-2xl font-bold mb-4">Bienvenido, Administrador!</h2>
-        <p>Aquí puedes gestionar usuarios, productos, talleres y reportes.</p>
-        <!-- Contenido específico del dashboard de administrador -->
+        <h2 class="text-2xl font-bold mb-4">Bienvenido, Beneficiario!</h2>
+        <p>Aquí puedes ver tus productos comprados, recetas y talleres.</p>
+        <!-- Contenido específico del dashboard de beneficiario -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
             <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-lg font-semibold mb-2">Gestionar Usuarios</h3>
-                <p>Administra las cuentas de usuarios, chefs y productores.</p>
-                <a href="#" class="text-green-600 hover:underline">Ver Usuarios</a>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-lg font-semibold mb-2">Gestionar Productos</h3>
-                <p>Revisa y aprueba los productos de los productores.</p>
+                <h3 class="text-lg font-semibold mb-2">Mis Productos</h3>
+                <p>Revisa los productos que has adquirido.</p>
                 <a href="#" class="text-green-600 hover:underline">Ver Productos</a>
             </div>
             <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-lg font-semibold mb-2">Reportes</h3>
-                <p>Accede a estadísticas y reportes del sistema.</p>
-                <a href="#" class="text-green-600 hover:underline">Ver Reportes</a>
+                <h3 class="text-lg font-semibold mb-2">Mis Recetas</h3>
+                <p>Explora las recetas que te interesan.</p>
+                <a href="#" class="text-green-600 hover:underline">Ver Recetas</a>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-2">Mis Talleres</h3>
+                <p>Gestiona tus inscripciones a talleres.</p>
+                <a href="#" class="text-green-600 hover:underline">Ver Talleres</a>
             </div>
         </div>
     </main>

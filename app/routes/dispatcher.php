@@ -13,11 +13,11 @@ $uri = trim($uri, '/');
 // 3. Definir rutas válidas y sus vistas asociadas
 $routes = [
     ''           => 'app/views/home.php',        // Página de inicio
-    'usuario'    => 'app/views/usuario.php',     // Dashboard usuario
-    'chef'       => 'app/views/chef.php',        // Dashboard chef
-    'productor'  => 'app/views/productor.php',   // Dashboard productor
-    'docente'    => 'app/views/docente.php',     // Dashboard docente
-    'admin'      => 'app/views/admin.php',       // Dashboard administrador
+    'usuario'    => 'app/views/usuario/dashboard.php',     // Dashboard usuario
+    'chef'       => 'app/views/chef/dashboard.php',        // Dashboard chef
+    'productor'  => 'app/views/productor/dashboard.php',   // Dashboard productor
+    'docente'    => 'app/views/docente/index.php',     // Dashboard docente
+    'admin'      => 'app/views/admin/dashboard.php',       // Dashboard administrador
 ];
 
 // 4. Verificar si la ruta existe en el arreglo

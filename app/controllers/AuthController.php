@@ -35,4 +35,16 @@ class AuthController {
         header("Location: login.php");
         exit();
     }
+
+    public static function register($nombre, $email, $password, $rol) {
+        return UsuarioController::create($nombre, $email, $password, $rol);
+    }
+
+    public static function recoverPassword($email) {
+        global $conn;
+        $token = bin2hex(random_bytes(32));
+        $stmt = $conn->prepare("UPDATE usuarios SET reset_token = ? WHERE email = ?");
+        $stmt->bind_param("ss", $token, $email);
+        return $stmt->execute();
+    }
 }
